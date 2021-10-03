@@ -1,31 +1,53 @@
-import { useForm } from 'react-hook-form'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
-function TextInput({ onSubmit }) {
-  const { register, handleSubmit } = useForm()
-
-  const onFormSubmit = data => {
-    onSubmit(data.message)
+class TextInput extends Component {
+  static propTypes = {
+    text: PropTypes.string,
+    onSubmit: PropTypes.func,
   }
 
-  return (
-    <form onSubmit={handleSubmit(onFormSubmit)}>
-      <div>
+  constructor() {
+    super()
+
+    this.state = {
+      value: '',
+    }
+  }
+
+  handleInputChange = event => {
+    this.setState({ value: event.target.value })
+  }
+
+  handleSubmit = (event) => {
+    event.preventDefault()
+
+    this.props.onSubmit(this.state.value)
+    this.setState({ value: '' })
+  }
+
+  handleInsertEmoji = () => {
+    this.setState({
+      value: this.state.value + '😅'
+    })
+  }
+
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
         <div>
-         <input
-           {...register('name')}
-         />
+          <textarea
+            cols="30"
+            rows="5"
+            value={this.state.value}
+            onChange={this.handleInputChange}
+          />
         </div>
-        <textarea
-          cols="30"
-          rows="5"
-          // value={}
-          // onChange={}
-          {...register('message')}
-        />
-      </div>
-      <button>Отправить</button>
-    </form>
-  )
+        <button type="submit" disabled={this.state.value === ''}>Отправить</button>
+        <button type="button" onClick={this.handleInsertEmoji}>😅</button>
+      </form>
+    )
+  }
 }
 
 export default TextInput
