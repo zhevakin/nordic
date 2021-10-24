@@ -7,10 +7,14 @@ function ConnectedCounter() {
   const counter = useSelector(counterSelector)
   const dispatch = useDispatch()
 
+  const handlePlus = () => {
+    dispatch(incremented())
+  }
+
   return (
     <Counter
       counter={counter}
-      onPlus={() => dispatch(incremented())}
+      onPlus={handlePlus}
       onMinus={() => dispatch(decremented())}
       onChange={value => dispatch(changed(value))}
     />

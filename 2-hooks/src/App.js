@@ -1,89 +1,73 @@
-import React, { Component } from 'react'
+import React, { useEffect, useState } from 'react'
 import Message from './components/Message'
 import TextInput from './components/TextInput'
 import Clock from './components/Clock'
-import './App.css';
+import './App.css'
 
-class Chat extends Component {
-  constructor() {
-    super()
-    this.state = {
-      messages: [],
-      clock: true,
+import useToggle from './hooks/useToggle'
+
+const initMessages = [
+  {
+    id: 0,
+    age: 20,
+    name: 'Ivan',
+    text: 'Hello',
+  },
+  {
+    id: 1,
+    age: 25,
+    name: 'Alex',
+    text: 'Welcome!'
+  },
+]
+
+function Chat() {
+  const [clock, toggleClock] = useToggle(true)
+  const [messages, setMessages] = useState(initMessages)
+
+  useEffect(() => {
+    if (clock === false) {
+      console.log('Часы скрыты')
     }
+  }, [ clock ])
+
+  const handleMessageSubmit = ({ name, text }) => {
+    const newMessage = {
+      name,
+      text,
+    }
+
+    setMessages([ ...messages, newMessage ])
   }
 
-  componentDidMount() {
-    // api
-
-    const newMessages = [
-      {
-        id: 0,
-        age: 20,
-        name: 'Ivan',
-        text: 'Hello',
-      },
-      {
-        id: 1,
-        age: 25,
-        name: 'Alex',
-        text: 'Welcome!'
-      },
-    ]
-
-    this.setState({
-      messages: newMessages,
-    })
+  const handleClearChat = () => {
+    setMessages([])
   }
 
-  handleMessageSubmit = message => {
-    const newMessage = this.state.messages
+  return (
+    <div className="App">
 
-    newMessage.push({
-      name: 'Dmitry',
-      text: message,
-    })
+      <button onClick={toggleClock}>
+        {clock ? 'Скрыть часы' : 'Показать часы'}
+      </button>
 
-    this.setState({
-      messages: newMessage,
-    })
-  }
+      {clock && <Clock/>}
 
-  handleClearChat = () => {
-    this.setState({
-      messages: []
-    })
-  }
+      <div>
 
-  render() {
-    const messages = this.state.messages
-    const { clock } = this.state
+        {messages.map(message => (
+          <div>
+            <Message age={message.age} text={message.text} name={message.name} />
+          </div>
+        ))}
 
-    return (
-      <div className="App">
+        <TextInput onFormSubmit={handleMessageSubmit}/>
 
-        {clock && <button onClick={() => this.setState({ clock: false })}>Скрыть часы</button>}
-        {!clock && <button onClick={() => this.setState({ clock: true })}>Показать часы</button>}
+        <button onClick={handleClearChat}>Очистить чат</button>
 
-        {clock && <Clock/>}
-
-        <div>
-
-          {messages.map(message => (
-            <div>
-              <Message age={message.age} text={message.text} name={message.name} />
-            </div>
-          ))}
-
-          <TextInput onSubmit={this.handleMessageSubmit}/>
-
-          <button onClick={this.handleClearChat}>Очистить чат</button>
-
-        </div>
       </div>
-    );
-
-  }
+    </div>
+  )
 }
 
-export default Chat;
+export default Chat

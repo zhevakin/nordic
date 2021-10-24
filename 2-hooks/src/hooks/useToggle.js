@@ -1,14 +1,9 @@
-import { useState, useCallback} from 'react'
+import { useState } from 'react'
 
-const useToggle = (initialState = false) => {
-  // Initialize the state
-  const [state, setState] = useState(initialState);
-
-  // Define and memorize toggler function in case we pass down the comopnent,
-  // This function change the boolean value to it's opposite value
-  const toggle = useCallback(() => setState(state => !state), []);
-
-  return [state, toggle]
+function useToggle(initValue) {
+  const [value, setValue] = useState(initValue)
+  const toggle = () => setValue(!value)
+  return [value, toggle]
 }
 
 export default useToggle

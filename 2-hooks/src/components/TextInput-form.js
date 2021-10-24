@@ -1,15 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useForm } from 'react-hook-form'
 
 function TextInput({ onFormSubmit }) {
-  const { register, handleSubmit, getValues, setValue, formState } = useForm({
-    mode: 'onChange'
+  const { register, handleSubmit, setValue, getValues, formState } = useForm({
+    mode: "onChange"
   })
 
   const onSubmit = (data) => {
     onFormSubmit(data)
-    setValue('text', '')
   }
 
   const handleInsertEmoji = () => {
